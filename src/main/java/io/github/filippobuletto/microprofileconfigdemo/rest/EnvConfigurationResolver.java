@@ -1,11 +1,11 @@
 package io.github.filippobuletto.microprofileconfigdemo.rest;
 
 import java.io.Serializable;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 
-import javax.enterprise.inject.Alternative;
-
-@Alternative
-public class EnvConfigurationResolver implements SortableConfigurationResolver, Serializable {
+@Named @ApplicationScoped
+public class EnvConfigurationResolver implements ConfigurationSource, Serializable {
 
 	private static final long serialVersionUID = -9167455523023830262L;
 

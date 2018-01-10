@@ -1,29 +1,33 @@
 package io.github.filippobuletto.microprofileconfigdemo.rest;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
 import viper.ConfigurationResolver;
 
 @ApplicationScoped
 public class MyConfigurationResolver implements ConfigurationResolver<Property>, Serializable {
 
   private static final long serialVersionUID = 6005660722941789794L;
-  private final List<ConfigurationResolver<Property>> resolvers;
+  private List<ConfigurationSource> resolvers;
+  
+  @Inject @Any
+  private Instance<ConfigurationSource> resolverInstances;
 
-  public MyConfigurationResolver() {
-    final List<SortableConfigurationResolver> resolvers = new ArrayList<>();
-    resolvers.add(new EnvConfigurationResolver());
-    resolvers.add(new SysConfigurationResolver());
-    resolvers.add(new PropsConfigurationResolver());
+  @PostConstruct
+  void init() {
     this.resolvers =
-        resolvers.stream()
-            .sorted(Comparator.comparing(SortableConfigurationResolver::getOrdinal)
+    StreamSupport.stream(resolverInstances.spliterator(),
+        false)
+            .sorted(Comparator.comparing(ConfigurationSource::getOrdinal)
                               .thenComparing(obj -> obj.getClass().getName()))
             .collect(Collectors.toList());
   }

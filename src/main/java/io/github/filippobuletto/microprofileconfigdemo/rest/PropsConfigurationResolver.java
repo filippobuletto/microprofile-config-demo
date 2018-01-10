@@ -3,11 +3,11 @@ package io.github.filippobuletto.microprofileconfigdemo.rest;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 
-import javax.enterprise.inject.Alternative;
-
-@Alternative
-public class PropsConfigurationResolver implements SortableConfigurationResolver, Serializable {
+@Named @ApplicationScoped
+public class PropsConfigurationResolver implements ConfigurationSource, Serializable {
 
 	private static final long serialVersionUID = -4673972447435787055L;
 	private final Map<String,String> props;
